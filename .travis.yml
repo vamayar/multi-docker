@@ -16,6 +16,8 @@ after_success:
   - docker build -t vamaya/multi-worker /.worker
   #Log in  to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  
   #take those images and push them to docker hub
   - docker push vamaya/multi-client
   - docker push vamaya/multi-nginx
