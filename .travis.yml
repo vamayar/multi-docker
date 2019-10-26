@@ -1,28 +1,23 @@
+language: generic
 sudo: required
 services:
-  - docker
-
-before_install:
+ - docker
+before_build:
   - docker build -t vamaya/react-test -f ./client/Dockerfile.dev ./client
-
-
-script:
-  - docker run -e CI=true vamaya/react-test npm test -- --coverage
-
+ 
+script: 
+  - docker run -e CI=true vamaya/react-test npm test
+ 
 after_success:
-  - docker build -t vamaya/multi-client ./client
-  - docker build -t vamaya/multi-nginx ./nginx
-  - docker build -t vamaya/multi-server ./server
-  - docker build -t vamaya/multi-worker /.worker
-  #Log in  to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-
-  
-  #take those images and push them to docker hub
-  - docker push vamaya/multi-client
-  - docker push vamaya/multi-nginx
-  - docker push vamaya/multi-server
-  - docker push vamaya/multi-worker
-
-  
-
+ - docker build -t reazm/multi-client ./client
+ - docker build -t reazm/multi-server ./server
+ - docker build -t reazm/multi-nginx ./nginx
+ - docker build -t reazm/multi-worker ./client
+ 
+ # Log in to docker cli
+ - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+ # push the docker images to docker hub
+ - docker push reazm/multi-client
+ - docker push reazm/multi-server
+ - docker push reazm/multi-nginx
+ - docker push reazm/multi-worker
